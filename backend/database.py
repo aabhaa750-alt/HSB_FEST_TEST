@@ -1,12 +1,26 @@
 import sqlite3
 from pathlib import Path
 
+import os
+import shutil
+
 # Path to fest.db in project root
-DB_PATH = Path(__file__).resolve().parent.parent / "fest.db"
+BASE_DB_PATH = Path(__file__).resolve().parent.parent / "fest.db"
+
+def get_db_path() -> Path:
+    """Returns DB path. On Vercel serverless, copies to writable /tmp."""
+    if os.environ.get("VERCEL"):
+        tmp_db = Path("/tmp/fest.db")
+        if not tmp_db.exists() and BASE_DB_PATH.exists():
+            shutil.copy2(BASE_DB_PATH, tmp_db)
+        return tmp_db
+    return BASE_DB_PATH
+
+DB_PATH = BASE_DB_PATH
 
 def get_db_connection():
     """Connects to SQLite database fest.db and configures row factory."""
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(get_db_path())
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA foreign_keys = ON;")
     return conn
