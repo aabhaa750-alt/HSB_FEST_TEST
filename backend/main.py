@@ -8,7 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
-from backend.database import get_db_connection, init_db
+from backend.database import get_db_connection, init_db, get_site_settings, update_site_settings
 from backend.seed_data import seed_events
 from backend.models import (
     EventOut,
@@ -18,6 +18,8 @@ from backend.models import (
     RegistrationListItem,
     StatsOut,
     EventCreate,
+    SettingsOut,
+    SettingsUpdate,
 )
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -409,9 +411,24 @@ def delete_registration(registration_id: int):
     return {"message": "Registration cancelled successfully", "id": registration_id}
 
 
+# --- Christmas Experience & Animation Settings Endpoints ---
+
+@app.get("/api/settings", response_model=SettingsOut, tags=["Settings"])
+def get_settings():
+    """Retrieve Christmas experience settings (Santa, gifts, snow, countdown, theme)."""
+    return get_site_settings()
+
+
+@app.put("/api/settings", response_model=SettingsOut, tags=["Settings"])
+def update_settings(payload: SettingsUpdate):
+    """Admin updates Christmas experience and animation settings in SQLite."""
+    updated = update_site_settings(payload.dict(exclude_unset=True))
+    return updated
+
+
 # --- Static Files / Frontend Mount (Step 4) ---
 
-@app.get("/", include_in_schema=False)
+@app.api_route("/", methods=["GET", "HEAD"], include_in_schema=False)
 def serve_root():
     """Serves frontend/index.html on root path."""
     index_file = FRONTEND_DIR / "index.html"
@@ -420,7 +437,7 @@ def serve_root():
     return {"message": "Zenith '26 API is running"}
 
 
-@app.get("/admin.html", include_in_schema=False)
+@app.api_route("/admin.html", methods=["GET", "HEAD"], include_in_schema=False)
 def serve_admin():
     """Serves frontend/admin.html."""
     admin_file = FRONTEND_DIR / "admin.html"

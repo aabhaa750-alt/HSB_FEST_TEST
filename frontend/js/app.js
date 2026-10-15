@@ -898,11 +898,474 @@ function initChristmasCountdown() {
 }
 
 // ==========================================
-// 4. FESTIVE INTERACTIVE CONTROLS SETUP
+// 4. ANIMATED SANTA CLAUS & REINDEER FLIGHT ENGINE
+// ==========================================
+class SantaFlightEngine {
+  constructor(stageId) {
+    this.stage = document.getElementById(stageId);
+    this.santaEl = null;
+    this.intervalId = null;
+    this.isFlying = false;
+    this.enabled = true;
+    this.giftsEnabled = true;
+    this.speedMode = "normal"; // fast, normal, slow
+    this.flightInterval = 30; // seconds
+    this.giftsCount = 2; // 1 to 4
+    this.stardustInterval = null;
+
+    // Accessibility check: prefers-reduced-motion
+    const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (reducedMotionQuery.matches) {
+      this.enabled = false;
+    }
+  }
+
+  getSpeedDuration() {
+    switch (this.speedMode) {
+      case "fast": return 11;
+      case "slow": return 23;
+      default: return 16;
+    }
+  }
+
+  start() {
+    this.stop();
+    if (!this.enabled || !this.stage) return;
+
+    // Launch first flight after a natural initial delay
+    setTimeout(() => {
+      if (this.enabled && !this.isFlying) {
+        this.launchFlight();
+      }
+    }, 2000);
+
+    // Schedule regular flights
+    this.intervalId = setInterval(() => {
+      if (this.enabled && !this.isFlying) {
+        this.launchFlight();
+      }
+    }, Math.max(12, this.flightInterval) * 1000);
+  }
+
+  stop() {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+      this.intervalId = null;
+    }
+    if (this.santaEl && this.santaEl.parentNode) {
+      this.santaEl.remove();
+      this.santaEl = null;
+    }
+    this.isFlying = false;
+  }
+
+  launchFlight() {
+    if (!this.stage || this.isFlying) return;
+    this.isFlying = true;
+
+    const duration = this.getSpeedDuration();
+    const isMobile = window.innerWidth < 640;
+    const stageWidth = window.innerWidth;
+
+    // Santa Wrapper
+    const santaWrapper = document.createElement("div");
+    santaWrapper.className = "absolute pointer-events-none select-none transition-none";
+    santaWrapper.style.width = isMobile ? "240px" : "330px";
+    santaWrapper.style.height = isMobile ? "75px" : "95px";
+    santaWrapper.style.top = isMobile ? "32px" : "clamp(28px, 6vh, 85px)";
+    santaWrapper.style.left = "-360px";
+    santaWrapper.style.zIndex = "25";
+    santaWrapper.style.filter = "drop-shadow(0 6px 14px rgba(0,0,0,0.4))";
+    santaWrapper.setAttribute("aria-hidden", "true");
+
+    santaWrapper.innerHTML = `
+      <div class="sleigh-bob-motion w-full h-full">
+        <svg viewBox="0 0 340 100" class="w-full h-full" overflow="visible" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="sleighGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#b91c1c"/>
+              <stop offset="100%" stop-color="#7f1d1d"/>
+            </linearGradient>
+            <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#fde047"/>
+              <stop offset="100%" stop-color="#d97706"/>
+            </linearGradient>
+          </defs>
+
+          <!-- Golden Reins -->
+          <path d="M 120 48 Q 170 38 215 42 Q 255 40 280 44" fill="none" stroke="url(#goldGrad)" stroke-width="1.8" stroke-dasharray="3,1" opacity="0.85"/>
+
+          <!-- REINDEER 2 (Trailing Reindeer) -->
+          <g class="reindeer-unit" transform="translate(180, 15)">
+            <path d="M 25 35 Q 35 25 50 28 Q 62 30 65 38 Q 60 48 40 46 Q 25 46 25 35 Z" fill="#92400e"/>
+            <path d="M 58 28 Q 68 18 78 22 Q 80 28 72 34 Q 62 35 58 28 Z" fill="#b45309"/>
+            <path d="M 70 20 L 74 10 M 74 13 L 78 8 M 72 15 L 68 11" stroke="#fef08a" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="72" cy="24" r="1.5" fill="#1e293b"/>
+            <circle cx="62" cy="35" r="2.5" fill="#facc15"/>
+            <!-- Front Legs -->
+            <g class="deer-front-legs" style="transform-origin: 60px 42px;">
+              <path d="M 60 42 Q 68 55 76 60" stroke="#78350f" stroke-width="3" stroke-linecap="round" fill="none"/>
+              <path d="M 57 42 Q 63 53 70 58" stroke="#92400e" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+            </g>
+            <!-- Back Legs -->
+            <g class="deer-back-legs" style="transform-origin: 30px 42px;">
+              <path d="M 32 42 Q 22 55 14 58" stroke="#78350f" stroke-width="3" stroke-linecap="round" fill="none"/>
+              <path d="M 35 42 Q 26 53 20 57" stroke="#92400e" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+            </g>
+            <path d="M 25 35 Q 20 30 22 36" stroke="#92400e" stroke-width="3" stroke-linecap="round"/>
+          </g>
+
+          <!-- REINDEER 1 (Rudolph the Lead Reindeer with Glowing Red Nose) -->
+          <g class="reindeer-unit" transform="translate(250, 8)">
+            <path d="M 25 35 Q 35 25 50 28 Q 62 30 65 38 Q 60 48 40 46 Q 25 46 25 35 Z" fill="#92400e"/>
+            <path d="M 58 28 Q 68 18 78 22 Q 80 28 72 34 Q 62 35 58 28 Z" fill="#b45309"/>
+            <path d="M 70 20 L 75 8 M 75 12 L 80 7 M 72 14 L 67 9" stroke="#fde047" stroke-width="2.2" stroke-linecap="round"/>
+            <circle cx="72" cy="24" r="1.5" fill="#1e293b"/>
+            <!-- Rudolph's Glowing Red Nose! -->
+            <circle cx="79" cy="26" r="3.5" fill="#ef4444" class="rudolph-nose"/>
+            <path d="M 60 30 Q 64 36 62 42" stroke="#dc2626" stroke-width="2.5" fill="none"/>
+            <circle cx="62" cy="36" r="2.5" fill="#facc15"/>
+            <!-- Front Legs -->
+            <g class="deer-front-legs" style="transform-origin: 60px 42px;">
+              <path d="M 60 42 Q 70 54 80 58" stroke="#78350f" stroke-width="3" stroke-linecap="round" fill="none"/>
+              <path d="M 57 42 Q 65 52 73 57" stroke="#92400e" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+            </g>
+            <!-- Back Legs -->
+            <g class="deer-back-legs" style="transform-origin: 30px 42px;">
+              <path d="M 32 42 Q 20 54 12 56" stroke="#78350f" stroke-width="3" stroke-linecap="round" fill="none"/>
+              <path d="M 36 42 Q 25 52 18 55" stroke="#92400e" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+            </g>
+            <path d="M 25 35 Q 18 30 20 36" stroke="#92400e" stroke-width="3" stroke-linecap="round"/>
+          </g>
+
+          <!-- SLEIGH & SANTA GROUP -->
+          <g class="sleigh-group" transform="translate(10, 18)">
+            <!-- Sack of Toys -->
+            <ellipse cx="42" cy="42" rx="22" ry="18" fill="#854d0e" stroke="#ca8a04" stroke-width="1.5"/>
+            <path d="M 32 30 Q 42 22 52 30" stroke="#fde047" stroke-width="2" fill="none"/>
+            <rect x="36" y="22" width="12" height="12" rx="1.5" fill="#15803d" stroke="#facc15" stroke-width="1"/>
+            <path d="M 42 22 L 42 34 M 36 28 L 48 28" stroke="#facc15" stroke-width="1"/>
+            <rect x="46" y="25" width="10" height="10" rx="1.5" fill="#dc2626" stroke="#fde047" stroke-width="1"/>
+
+            <!-- Santa Claus -->
+            <g transform="translate(62, 10)">
+              <path d="M 10 32 C 10 24 24 24 24 32 L 27 48 L 5 48 Z" fill="#dc2626"/>
+              <rect x="4" y="46" width="24" height="4" rx="2" fill="#ffffff"/>
+              <rect x="6" y="38" width="20" height="4" fill="#0f172a"/>
+              <rect x="13" y="37" width="6" height="6" rx="1" fill="#facc15"/>
+              <rect x="14.5" y="38.5" width="3" height="3" fill="#0f172a"/>
+              <circle cx="16" cy="18" r="8" fill="#fed7aa"/>
+              <circle cx="12" cy="20" r="1.5" fill="#f87171" opacity="0.7"/>
+              <circle cx="20" cy="20" r="1.5" fill="#f87171" opacity="0.7"/>
+              <circle cx="13" cy="17" r="1" fill="#0f172a"/>
+              <circle cx="19" cy="17" r="1" fill="#0f172a"/>
+              <ellipse cx="16" cy="19" rx="2" ry="1.5" fill="#fca5a5"/>
+              <path d="M 8 20 Q 16 34 24 20 Q 20 28 16 28 Q 12 28 8 20 Z" fill="#ffffff"/>
+              <path d="M 8 15 Q 16 8 24 15 Q 26 6 32 12" stroke="#dc2626" stroke-width="5" stroke-linecap="round" fill="none"/>
+              <rect x="7" y="13" width="18" height="3.5" rx="1.5" fill="#ffffff"/>
+              <circle cx="32" cy="12" r="3" fill="#ffffff"/>
+              <!-- Arm Waving -->
+              <path d="M 22 30 Q 30 25 34 20" stroke="#dc2626" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+              <circle cx="35" cy="19" r="3.5" fill="#ffffff"/>
+              <ellipse cx="36" cy="18" rx="3" ry="2.5" fill="#15803d"/>
+            </g>
+
+            <!-- Crimson Sleigh Body -->
+            <path d="M 18 52 C 22 38 45 38 75 42 C 95 44 112 40 118 52 C 114 62 30 65 18 52 Z" fill="url(#sleighGrad)" stroke="#7f1d1d" stroke-width="1.5"/>
+            <path d="M 20 50 C 45 38 85 43 116 50" stroke="url(#goldGrad)" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+            <path d="M 22 55 Q 65 59 110 55" stroke="#fde047" stroke-width="1.2" opacity="0.8" fill="none"/>
+
+            <!-- Golden Sleigh Runners -->
+            <path d="M 12 66 L 115 66 C 126 66 132 58 128 50 C 125 45 120 48 122 52 C 124 56 120 62 112 62 L 20 62 C 12 62 8 58 10 52 C 11 48 7 48 5 52 C 3 58 7 66 12 66 Z" fill="url(#goldGrad)"/>
+            <path d="M 38 58 L 36 63 M 65 58 L 65 63 M 95 56 L 96 63" stroke="url(#goldGrad)" stroke-width="2.5" stroke-linecap="round"/>
+          </g>
+        </svg>
+      </div>
+    `;
+
+    this.stage.appendChild(santaWrapper);
+    this.santaEl = santaWrapper;
+
+    const startX = -360;
+    const endX = stageWidth + 80;
+    const totalDistance = endX - startX;
+    const startTime = performance.now();
+
+    // Determine drop intervals
+    const dropThresholds = [];
+    if (this.giftsEnabled) {
+      const count = isMobile ? Math.min(2, this.giftsCount) : this.giftsCount;
+      for (let i = 1; i <= count; i++) {
+        dropThresholds.push(i / (count + 1));
+      }
+    }
+    const droppedGifts = new Set();
+
+    // Smooth horizontal translation loop
+    const animateFlight = (now) => {
+      if (!this.isFlying || !this.santaEl) return;
+      const elapsed = (now - startTime) / 1000;
+      const progress = Math.min(1, elapsed / duration);
+
+      const currentX = startX + totalDistance * progress;
+      const altitudeOffset = Math.sin(progress * Math.PI * 3) * 12;
+
+      this.santaEl.style.transform = `translate3d(${currentX}px, ${altitudeOffset}px, 0)`;
+
+      // Spawn subtle stardust behind sleigh runner
+      if (Math.random() < 0.35) {
+        this.spawnStardust(
+          currentX + 25,
+          parseFloat(this.santaEl.style.top || 35) + altitudeOffset + (isMobile ? 55 : 75)
+        );
+      }
+
+      // Drop gift when progress crosses threshold
+      dropThresholds.forEach((threshold, idx) => {
+        if (progress >= threshold && !droppedGifts.has(idx)) {
+          droppedGifts.add(idx);
+          const dropX = currentX + (isMobile ? 50 : 70);
+          const dropY = parseFloat(this.santaEl.style.top || 35) + altitudeOffset + (isMobile ? 55 : 75);
+          this.dropGift(dropX, dropY, idx);
+        }
+      });
+
+      if (progress < 1) {
+        requestAnimationFrame(animateFlight);
+      } else {
+        if (this.santaEl && this.santaEl.parentNode) {
+          this.santaEl.remove();
+        }
+        this.santaEl = null;
+        this.isFlying = false;
+      }
+    };
+
+    requestAnimationFrame(animateFlight);
+  }
+
+  // Stardust particle behind sleigh
+  spawnStardust(x, y) {
+    if (!this.stage) return;
+    const star = document.createElement("div");
+    const colors = ["#fde047", "#fef08a", "#ffffff", "#f59e0b", "#93c5fd"];
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    const size = Math.random() * 4 + 2.5;
+
+    star.className = "absolute pointer-events-none rounded-full";
+    star.style.left = `${x}px`;
+    star.style.top = `${y}px`;
+    star.style.width = `${size}px`;
+    star.style.height = `${size}px`;
+    star.style.backgroundColor = color;
+    star.style.boxShadow = `0 0 6px ${color}`;
+    star.style.animation = "stardustTwinkle 0.8s ease-out forwards";
+    star.style.zIndex = "24";
+
+    this.stage.appendChild(star);
+    setTimeout(() => {
+      if (star.parentNode) star.remove();
+    }, 850);
+  }
+
+  // Drop wrapped gift
+  dropGift(startX, startY, index) {
+    if (!this.stage || !this.giftsEnabled) return;
+
+    const giftStyles = [
+      { box: "#b91c1c", ribbon: "#fbbf24", bow: "#fde047", name: "Crimson & Gold Surprise" },
+      { box: "#15803d", ribbon: "#dc2626", bow: "#fbbf24", name: "Emerald & Ruby Delight" },
+      { box: "#d97706", ribbon: "#065f46", bow: "#34d399", name: "Golden Pine Treasure" },
+      { box: "#faf7f2", ribbon: "#b91c1c", bow: "#f59e0b", name: "Ivory Wonder Present" },
+    ];
+    const style = giftStyles[index % giftStyles.length];
+
+    const gift = document.createElement("div");
+    const fallDuration = (Math.random() * 0.9 + 3.8).toFixed(2);
+
+    gift.className = "falling-gift absolute pointer-events-auto cursor-pointer group";
+    gift.style.left = `${startX}px`;
+    gift.style.top = `${startY}px`;
+    gift.style.width = "40px";
+    gift.style.height = "40px";
+    gift.style.zIndex = "26";
+    gift.style.animation = `giftTumble ${fallDuration}s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards`;
+    gift.setAttribute("title", "Click to catch Santa's gift! 🎁");
+
+    gift.innerHTML = `
+      <svg viewBox="0 0 44 44" class="w-full h-full filter drop-shadow-[0_4px_8px_rgba(0,0,0,0.35)] group-hover:scale-110 transition-transform">
+        <rect x="6" y="14" width="32" height="26" rx="4" fill="${style.box}" stroke="rgba(255,255,255,0.25)" stroke-width="1"/>
+        <rect x="4" y="10" width="36" height="7" rx="2.5" fill="${style.box}" filter="brightness(1.1)"/>
+        <rect x="19" y="10" width="6" height="30" fill="${style.ribbon}"/>
+        <rect x="6" y="24" width="32" height="6" fill="${style.ribbon}"/>
+        <path d="M 17 10 C 13 4 8 7 13 10 Z" fill="${style.bow}"/>
+        <path d="M 27 10 C 31 4 36 7 31 10 Z" fill="${style.bow}"/>
+        <circle cx="22" cy="10" r="3" fill="${style.bow}" stroke="#d97706" stroke-width="0.8"/>
+        <circle cx="10" cy="18" r="1.5" fill="#ffffff" opacity="0.8"/>
+      </svg>
+    `;
+
+    // Interactive Catch Handler
+    gift.addEventListener("click", (e) => {
+      e.stopPropagation();
+      this.catchGift(gift, style);
+    });
+
+    // Auto removal
+    gift.addEventListener("animationend", () => {
+      if (gift.parentNode) gift.remove();
+    });
+    setTimeout(() => {
+      if (gift.parentNode) gift.remove();
+    }, (parseFloat(fallDuration) + 0.6) * 1000);
+
+    this.stage.appendChild(gift);
+  }
+
+  // Interactive Surprise Catch
+  catchGift(giftEl, style) {
+    if (!giftEl || !giftEl.parentNode) return;
+
+    const rect = giftEl.getBoundingClientRect();
+    const clickX = rect.left + rect.width / 2;
+    const clickY = rect.top + rect.height / 2;
+
+    // Bell chime
+    if (typeof christmasAudio !== "undefined" && christmasAudio.playBellChime) {
+      christmasAudio.playBellChime();
+    }
+
+    // Sparkle burst (12 radiating particles)
+    for (let i = 0; i < 12; i++) {
+      const spark = document.createElement("div");
+      const angle = (i / 12) * Math.PI * 2;
+      const distance = Math.random() * 45 + 30;
+      const dx = `${Math.cos(angle) * distance}px`;
+      const dy = `${Math.sin(angle) * distance}px`;
+      const starColors = ["#fbbf24", "#f43f5e", "#34d399", "#60a5fa", "#fde047"];
+      const color = starColors[i % starColors.length];
+
+      spark.className = "absolute pointer-events-none rounded-full";
+      spark.style.left = `${clickX}px`;
+      spark.style.top = `${clickY}px`;
+      spark.style.width = "7px";
+      spark.style.height = "7px";
+      spark.style.backgroundColor = color;
+      spark.style.boxShadow = `0 0 8px ${color}`;
+      spark.style.setProperty("--dx", dx);
+      spark.style.setProperty("--dy", dy);
+      spark.style.animation = "giftCatchSpark 0.75s ease-out forwards";
+      spark.style.zIndex = "60";
+
+      document.body.appendChild(spark);
+      setTimeout(() => {
+        if (spark.parentNode) spark.remove();
+      }, 800);
+    }
+
+    // Holiday Toast Notification
+    const toast = document.getElementById("gift-surprise-toast");
+    const toastMsg = document.getElementById("gift-toast-msg");
+    if (toast) {
+      const messages = [
+        `You caught a ${style.name}! Warm festive wishes from Zenith '26! 🎄✨`,
+        `Merry Christmas! Santa dropped you good fortune and holiday cheer! 🎁✨`,
+        `Holiday surprise caught! May your fest journey be magical and bright! 🌟🔔`,
+        `Season's Greetings! May peace, joy, and victory be yours! 🎅🎉`
+      ];
+      if (toastMsg) {
+        toastMsg.textContent = messages[Math.floor(Math.random() * messages.length)];
+      }
+      toast.classList.remove("translate-y-24", "opacity-0");
+      toast.classList.add("translate-y-0", "opacity-100");
+
+      setTimeout(() => {
+        toast.classList.remove("translate-y-0", "opacity-100");
+        toast.classList.add("translate-y-24", "opacity-0");
+      }, 4000);
+    }
+
+    // Fade out gift smoothly
+    giftEl.style.transition = "transform 0.22s ease-out, opacity 0.22s ease-out";
+    giftEl.style.transform = "scale(1.35)";
+    giftEl.style.opacity = "0";
+    setTimeout(() => {
+      if (giftEl.parentNode) giftEl.remove();
+    }, 240);
+  }
+}
+
+// ==========================================
+// 5. SYNCHRONIZE WITH SQLITE SITE SETTINGS
+// ==========================================
+async function syncSiteSettings(santaEngine, snowEngine) {
+  try {
+    const res = await fetch("/api/settings");
+    if (!res.ok) return;
+    const settings = await res.json();
+
+    // 1. Santa & Gifts
+    if (santaEngine) {
+      santaEngine.enabled = settings.santa_enabled !== false;
+      santaEngine.giftsEnabled = settings.gifts_enabled !== false;
+      santaEngine.speedMode = settings.flight_speed || "normal";
+      santaEngine.flightInterval = settings.flight_interval || 30;
+      santaEngine.giftsCount = settings.gifts_count || 2;
+      santaEngine.start();
+    }
+
+    // 2. Snow Sync
+    if (snowEngine && typeof settings.snow_enabled === "boolean") {
+      if (settings.snow_enabled && !snowEngine.enabled) snowEngine.toggle();
+      else if (!settings.snow_enabled && snowEngine.enabled) snowEngine.toggle();
+    }
+
+    // 3. Fairy Lights Garland
+    const garland = document.getElementById("fairy-lights-garland");
+    if (garland) {
+      if (settings.lights_enabled === false) {
+        garland.classList.add("hidden");
+      } else {
+        garland.classList.remove("hidden");
+      }
+    }
+
+    // 4. Festive Greeting Script
+    const greetingEl = document.getElementById("festive-greeting-text");
+    if (greetingEl && settings.festive_greeting) {
+      greetingEl.textContent = settings.festive_greeting;
+    }
+
+    // 5. Countdown Section
+    const countdownSec = document.getElementById("christmas-countdown");
+    if (countdownSec) {
+      if (settings.countdown_enabled === false) {
+        countdownSec.classList.add("hidden");
+      } else {
+        countdownSec.classList.remove("hidden");
+      }
+    }
+    const countdownTitleEl = document.getElementById("countdown-title-text");
+    if (countdownTitleEl && settings.countdown_title) {
+      countdownTitleEl.textContent = settings.countdown_title;
+    }
+  } catch (err) {
+    console.warn("Could not sync site settings:", err);
+  }
+}
+
+// ==========================================
+// 6. FESTIVE INTERACTIVE CONTROLS SETUP
 // ==========================================
 function initChristmasFeatures() {
   // Initialize Falling Snow
   const snowEngine = new SnowfallEngine("snow-canvas");
+
+  // Initialize Santa & Gifts Flight Engine
+  const santaEngine = new SantaFlightEngine("santa-stage");
+
+  // Synchronize dynamic settings from backend
+  syncSiteSettings(santaEngine, snowEngine);
 
   // Snow Toggle Button
   const snowToggleBtn = document.getElementById("snow-toggle-btn");
@@ -955,7 +1418,7 @@ function initChristmasFeatures() {
 }
 
 // ==========================================
-// 5. INITIALIZE ON DOM READY
+// 7. INITIALIZE ON DOM READY
 // ==========================================
 document.addEventListener("DOMContentLoaded", () => {
   fetchEvents();
