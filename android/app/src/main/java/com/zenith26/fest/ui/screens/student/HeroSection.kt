@@ -1,7 +1,9 @@
 package com.zenith26.fest.ui.screens.student
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -12,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -22,31 +25,39 @@ import com.zenith26.fest.ui.theme.*
 
 @OptIn(ExperimentalTextApi::class)
 @Composable
-fun HeroSection(modifier: Modifier = Modifier) {
+fun HeroSection(
+    modifier: Modifier = Modifier
+) {
+    val context = LocalContext.current
+
     val bgGradient = Brush.verticalGradient(
         colors = listOf(
-            Slate900,
-            Purple950,
-            Color(0xFF1E1B4B)
+            Color(0xFF2B050D), // Deep Xmas Wine
+            Color(0xFF4D0B17), // Crimson
+            Color(0xFF0A2318)  // Dark Pine
         )
     )
 
     val titleGradient = Brush.horizontalGradient(
-        colors = listOf(Purple400, Pink400, Amber300)
+        colors = listOf(
+            Color(0xFFFDE68A), // Light Gold
+            Color(0xFFF59E0B), // Amber Gold
+            Color(0xFFFEF08A)  // Yellow Gold
+        )
     )
 
     Column(
         modifier = modifier
             .fillMaxWidth()
             .background(bgGradient)
-            .padding(horizontal = 20.dp, vertical = 28.dp),
+            .padding(horizontal = 20.dp, vertical = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Tag Pill: Annual National College Fest
+        // Tag Pill: Christmas Edition
         Box(
             modifier = Modifier
-                .background(Color(0x99581C87), RoundedCornerShape(50))
-                .border(1.dp, Color(0x4DA855F7), RoundedCornerShape(50))
+                .background(Color(0x99450A0A), RoundedCornerShape(50))
+                .border(1.dp, Color(0xFFD97706).copy(alpha = 0.5f), RoundedCornerShape(50))
                 .padding(horizontal = 14.dp, vertical = 5.dp)
         ) {
             Row(
@@ -54,59 +65,96 @@ fun HeroSection(modifier: Modifier = Modifier) {
                 horizontalArrangement = Arrangement.spacedBy(6.dp)
             ) {
                 Text(
-                    text = "🎉 Annual National College Fest",
-                    color = Purple200,
+                    text = "🎄 Christmas Edition",
+                    color = Color(0xFFFDE68A),
                     fontSize = 11.sp,
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.Bold
                 )
-                Text(text = "•", color = Purple400, fontSize = 11.sp)
+                Text(text = "•", color = Color(0xFFD97706), fontSize = 11.sp)
                 Text(
                     text = "Nov 14–15, 2026",
-                    color = Purple200,
+                    color = Color(0xFFFED7AA),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.SemiBold
                 )
             }
         }
 
-        Spacer(modifier = Modifier.height(14.dp))
+        Spacer(modifier = Modifier.height(12.dp))
+
+        // Interactive Bell Button
+        Box(
+            modifier = Modifier
+                .background(Color(0x66041D14), RoundedCornerShape(50))
+                .border(1.dp, Color(0xFFF59E0B).copy(alpha = 0.4f), RoundedCornerShape(50))
+                .clickable {
+                    Toast.makeText(context, "🔔 Ringing Christmas Bells! Holiday Chimes! ✨", Toast.LENGTH_SHORT).show()
+                }
+                .padding(horizontal = 14.dp, vertical = 6.dp)
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                Text(text = "🔔", fontSize = 14.sp)
+                Text(
+                    text = "Tap to ring Christmas bells ✨",
+                    color = Color(0xFFFDE68A),
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.Medium
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        // Festive Greeting Script
+        Text(
+            text = "Welcome to the Christmas Wonderland",
+            color = Color(0xFFFDE68A),
+            fontSize = 18.sp,
+            fontWeight = FontWeight.SemiBold,
+            textAlign = TextAlign.Center
+        )
+
+        Spacer(modifier = Modifier.height(4.dp))
 
         // Big Headline
         Text(
-            text = "Experience the Surge at",
+            text = "Celebrate the Season at",
             color = Color.White,
-            fontSize = 26.sp,
+            fontSize = 24.sp,
             fontWeight = FontWeight.Black,
             textAlign = TextAlign.Center,
             letterSpacing = (-0.5).sp,
-            lineHeight = 32.sp
+            lineHeight = 28.sp
         )
 
         Text(
             text = "Zenith '26",
             style = TextStyle(
                 brush = titleGradient,
-                fontSize = 34.sp,
+                fontSize = 36.sp,
                 fontWeight = FontWeight.Black,
                 letterSpacing = (-1).sp,
                 textAlign = TextAlign.Center
             )
         )
 
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
         // Tagline
         Text(
-            text = "Compete, create, perform, and connect across 14 adrenaline-fueled technical hackathons, cultural spectacles, esports battles, and masterclasses.",
-            color = Slate300,
-            fontSize = 13.sp,
+            text = "Step into a magical holiday experience where competitive spirit meets festive cheer across 14 adrenaline-fueled hackathons, cultural spectacles, and esports battles.",
+            color = Color(0xFFFEF3C7).copy(alpha = 0.9f),
+            fontSize = 12.sp,
             fontWeight = FontWeight.Light,
             textAlign = TextAlign.Center,
-            lineHeight = 18.sp,
-            modifier = Modifier.padding(horizontal = 12.dp)
+            lineHeight = 17.sp,
+            modifier = Modifier.padding(horizontal = 8.dp)
         )
 
-        Spacer(modifier = Modifier.height(18.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         // Key stats summary row
         Row(
@@ -128,13 +176,13 @@ fun HeroSection(modifier: Modifier = Modifier) {
                 )
                 Text(
                     text = "14 Events",
-                    color = Slate300,
+                    color = Color(0xFFFED7AA),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Medium
                 )
             }
 
-            Text(text = "•", color = Slate500, fontSize = 11.sp)
+            Text(text = "•", color = Color(0xFFD97706), fontSize = 11.sp)
 
             // Stat 2
             Row(
@@ -146,17 +194,17 @@ fun HeroSection(modifier: Modifier = Modifier) {
                     modifier = Modifier
                         .size(7.dp)
                         .clip(CircleShape)
-                        .background(Purple400)
+                        .background(Color(0xFFB91C1C))
                 )
                 Text(
                     text = "2 Days",
-                    color = Slate300,
+                    color = Color(0xFFFED7AA),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Medium
                 )
             }
 
-            Text(text = "•", color = Slate500, fontSize = 11.sp)
+            Text(text = "•", color = Color(0xFFD97706), fontSize = 11.sp)
 
             // Stat 3
             Row(
@@ -168,11 +216,11 @@ fun HeroSection(modifier: Modifier = Modifier) {
                     modifier = Modifier
                         .size(7.dp)
                         .clip(CircleShape)
-                        .background(Amber400)
+                        .background(Color(0xFFF59E0B))
                 )
                 Text(
-                    text = "5 Categories",
-                    color = Slate300,
+                    text = "5 Domains",
+                    color = Color(0xFFFED7AA),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Medium
                 )

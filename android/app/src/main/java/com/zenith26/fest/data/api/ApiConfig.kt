@@ -7,8 +7,8 @@ object ApiConfig {
     private const val PREFS_NAME = "zenith26_prefs"
     private const val KEY_BASE_URL = "api_base_url"
 
-    // Public live tunnel URL for cloud emulators (Appetize.io) and external devices
-    const val DEFAULT_CLOUD_URL = "https://recommends-jail-engine-gained.trycloudflare.com/"
+    // Public live tunnel URL / Vercel cloud deployment for external devices & emulators
+    const val DEFAULT_CLOUD_URL = "https://hsb-fest-test-gamma.vercel.app/"
     const val DEFAULT_EMULATOR_URL = "http://10.0.2.2:8081/"
     const val DEFAULT_LOCALHOST_URL = "http://localhost:8081/"
 

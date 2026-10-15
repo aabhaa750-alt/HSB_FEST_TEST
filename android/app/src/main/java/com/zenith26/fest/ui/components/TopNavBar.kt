@@ -58,7 +58,7 @@ fun TopNavBar(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(
-                    text = "⚡",
+                    text = if (isAdminMode) "⚡" else "🎄",
                     fontSize = 22.sp
                 )
 
@@ -89,13 +89,13 @@ fun TopNavBar(
                 } else {
                     Box(
                         modifier = Modifier
-                            .background(Color(0xCC4C1D95), RoundedCornerShape(50))
-                            .border(1.dp, Color(0x667C3AED), RoundedCornerShape(50))
+                            .background(Color(0xFF450A0A), RoundedCornerShape(50))
+                            .border(1.dp, Color(0xFFD97706).copy(alpha = 0.5f), RoundedCornerShape(50))
                             .padding(horizontal = 8.dp, vertical = 2.dp)
                     ) {
                         Text(
-                            text = "Nov 14–15",
-                            color = Purple300,
+                            text = "❄️ Nov 14–15",
+                            color = Color(0xFFFDE68A),
                             fontSize = 10.sp,
                             fontWeight = FontWeight.SemiBold
                         )

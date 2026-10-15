@@ -75,7 +75,17 @@ fun StudentPortalScreen(
                 HeroSection()
             }
 
-            // 2. Controls: Search Bar & Categories
+            // 2. Flying Santa Claus & Interactive Gift Banner
+            item {
+                SantaFlightBanner()
+            }
+
+            // 3. Live Christmas Countdown Card
+            item {
+                ChristmasCountdownCard()
+            }
+
+            // 4. Controls: Search Bar & Categories
             item {
                 Box(modifier = Modifier.padding(horizontal = 16.dp)) {
                     SearchBarAndFilters(
