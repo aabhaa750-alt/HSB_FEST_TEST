@@ -78,23 +78,23 @@ fun ServerConfigDialog(
                 ) {
                     Box(
                         modifier = Modifier
-                            .weight(1.2f)
+                            .weight(1.3f)
                             .clip(RoundedCornerShape(8.dp))
-                            .background(if (urlText.contains("trycloudflare")) Purple100 else Slate100)
+                            .background(if (urlText.contains("vercel.app")) Purple100 else Slate100)
                             .border(
                                 1.dp,
-                                if (urlText.contains("trycloudflare")) Purple600 else Slate200,
+                                if (urlText.contains("vercel.app")) Purple600 else Slate200,
                                 RoundedCornerShape(8.dp)
                             )
-                            .clickable { urlText = "https://recommends-jail-engine-gained.trycloudflare.com/" }
+                            .clickable { urlText = "https://hsb-fest-test-gamma.vercel.app/" }
                             .padding(vertical = 8.dp),
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = "Cloud / Appetize\n(Live Tunnel)",
+                            text = "Vercel Cloud\n(Live Production)",
                             fontSize = 10.sp,
                             fontWeight = FontWeight.SemiBold,
-                            color = if (urlText.contains("trycloudflare")) Purple700 else Slate700,
+                            color = if (urlText.contains("vercel.app")) Purple700 else Slate700,
                             lineHeight = 13.sp
                         )
                     }

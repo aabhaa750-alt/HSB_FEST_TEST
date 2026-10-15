@@ -16,7 +16,12 @@ object ApiConfig {
 
     fun init(context: Context) {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        currentBaseUrl = prefs.getString(KEY_BASE_URL, DEFAULT_CLOUD_URL) ?: DEFAULT_CLOUD_URL
+        val saved = prefs.getString(KEY_BASE_URL, DEFAULT_CLOUD_URL) ?: DEFAULT_CLOUD_URL
+        currentBaseUrl = if (saved.contains("trycloudflare.com")) {
+            DEFAULT_CLOUD_URL
+        } else {
+            saved
+        }
         if (!currentBaseUrl.endsWith("/")) {
             currentBaseUrl += "/"
         }
