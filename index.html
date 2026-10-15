@@ -3,150 +3,481 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Zenith '26 — College Fest Portal</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22%20%220%22%20100%20100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
-  <!-- Tailwind CSS via Play CDN (for local classroom development; note: a production app would use a compiled stylesheet) -->
+  <title>Zenith '26 — Christmas Wonderland & College Fest Portal</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22%20%220%22%20100%20100%22><text y=%22.9em%22 font-size=%2290%22>🎄</text></svg>">
+
+  <!-- Google Fonts: Festive Script (Great Vibes), Classical Serif (Cinzel), Clean Body (Plus Jakarta Sans) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Great+Vibes&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS via Play CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       theme: {
         extend: {
           colors: {
-            brand: {
-              50: '#f5f3ff',
-              100: '#ede9fe',
-              500: '#8b5cf6',
-              600: '#7c3aed',
-              700: '#6d28d9',
-              900: '#4c1d95',
+            xmas: {
+              red: '#8b1524',
+              crimson: '#b91c1c',
+              ruby: '#991b1b',
+              darkred: '#450a0a',
+              forest: '#14532d',
+              pine: '#064e3b',
+              darkgreen: '#022c22',
+              night: '#041d14',
+              gold: '#d97706',
+              amber: '#f59e0b',
+              lightgold: '#fde68a',
+              cream: '#fffdf9',
+              snow: '#f8fafc',
             }
+          },
+          fontFamily: {
+            festive: ['"Great Vibes"', 'cursive'],
+            royal: ['"Cinzel"', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
           },
           keyframes: {
             fadeIn: {
               '0%': { opacity: '0', transform: 'translateY(10px)' },
               '100%': { opacity: '1', transform: 'translateY(0)' }
+            },
+            fairyGlow: {
+              '0%, 100%': { opacity: '0.9', filter: 'brightness(1.2) drop-shadow(0 0 6px currentColor)' },
+              '50%': { opacity: '0.4', filter: 'brightness(0.7) drop-shadow(0 0 1px currentColor)' }
+            },
+            bellSway: {
+              '0%, 100%': { transform: 'rotate(0deg)' },
+              '25%': { transform: 'rotate(7deg)' },
+              '75%': { transform: 'rotate(-7deg)' }
+            },
+            bellRing: {
+              '0%': { transform: 'rotate(0deg)' },
+              '15%': { transform: 'rotate(18deg)' },
+              '30%': { transform: 'rotate(-16deg)' },
+              '45%': { transform: 'rotate(12deg)' },
+              '60%': { transform: 'rotate(-10deg)' },
+              '75%': { transform: 'rotate(5deg)' },
+              '100%': { transform: 'rotate(0deg)' }
+            },
+            pulseSubtle: {
+              '0%, 100%': { transform: 'scale(1)' },
+              '50%': { transform: 'scale(1.03)' }
             }
           },
           animation: {
-            fadeIn: 'fadeIn 0.35s ease-out forwards'
+            fadeIn: 'fadeIn 0.35s ease-out forwards',
+            fairyGlow: 'fairyGlow 2.5s infinite ease-in-out',
+            bellSway: 'bellSway 3.5s infinite ease-in-out',
+            bellRing: 'bellRing 0.8s ease-in-out',
+            pulseSubtle: 'pulseSubtle 3s infinite ease-in-out',
           }
         }
       }
     }
   </script>
+
   <style>
+    /* Custom Christmas styling enhancements */
+    body {
+      background-color: #faf7f2;
+      background-image: 
+        radial-gradient(#e2d9cc 0.75px, transparent 0.75px),
+        radial-gradient(#e2d9cc 0.75px, #faf7f2 0.75px);
+      background-size: 30px 30px;
+      background-position: 0 0, 15px 15px;
+    }
+
     .card-transition {
       transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .card-transition:hover {
       transform: translateY(-4px);
+      box-shadow: 0 12px 24px -10px rgba(139, 21, 36, 0.15), 0 0 0 1px rgba(217, 119, 6, 0.35);
+    }
+
+    /* Gold text & glow utilities */
+    .gold-glow {
+      text-shadow: 0 0 14px rgba(245, 158, 11, 0.6), 0 0 25px rgba(217, 119, 6, 0.3);
+    }
+    .silver-glow {
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+    }
+
+    /* Christmas ribbon banner decoration */
+    .ribbon-badge {
+      position: relative;
+    }
+    .ribbon-badge::before {
+      content: '';
+      position: absolute;
+      top: -3px;
+      right: -3px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #fbbf24;
+      box-shadow: 0 0 6px #f59e0b;
+    }
+
+    /* Smooth scroll behavior */
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* Active bell ringing animation class */
+    .ringing {
+      animation: bellRing 0.8s ease-in-out !important;
+    }
+
+    /* Hide scrollbar for category pills on mobile */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
     }
   </style>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans antialiased selection:bg-purple-200">
+<body class="text-slate-800 min-h-screen flex flex-col font-sans antialiased selection:bg-amber-200 selection:text-amber-900 relative">
 
-  <!-- Top Navbar -->
-  <header class="bg-slate-900 border-b border-slate-800 text-white sticky top-0 z-30 shadow-md">
+  <!-- Falling Snow Canvas (Realistic, Lightweight, Toggleable) -->
+  <canvas id="snow-canvas" class="fixed inset-0 pointer-events-none z-20"></canvas>
+
+  <!-- Top Fairy Lights Garland (Glowing Holiday Bulbs) -->
+  <div class="relative z-30 w-full overflow-hidden pointer-events-none select-none bg-[#031d14] h-7 border-b border-emerald-950/80">
+    <!-- Green connecting wire curve -->
+    <svg class="absolute top-0 left-0 w-full h-4 text-emerald-900/60" preserveAspectRatio="none" viewBox="0 0 1200 20">
+      <path d="M0,5 Q50,16 100,5 Q150,16 200,5 Q250,16 300,5 Q350,16 400,5 Q450,16 500,5 Q550,16 600,5 Q650,16 700,5 Q750,16 800,5 Q850,16 900,5 Q950,16 1000,5 Q1050,16 1100,5 Q1150,16 1200,5" fill="none" stroke="currentColor" stroke-width="2"/>
+    </svg>
+    <!-- Staggered colorful glowing fairy light bulbs -->
+    <div class="absolute inset-x-0 top-1 flex justify-between px-2 sm:px-4 max-w-7xl mx-auto">
+      <span class="w-2.5 h-3.5 rounded-full bg-red-500 shadow-[0_0_10px_#ef4444] animate-fairyGlow" style="animation-delay: 0s;"></span>
+      <span class="w-2.5 h-3.5 rounded-full bg-amber-300 shadow-[0_0_10px_#fde047] animate-fairyGlow" style="animation-delay: 0.6s;"></span>
+      <span class="w-2.5 h-3.5 rounded-full bg-emerald-400 shadow-[0_0_10px_#34d399] animate-fairyGlow" style="animation-delay: 1.2s;"></span>
+      <span class="w-2.5 h-3.5 rounded-full bg-blue-400 shadow-[0_0_10px_#60a5fa] animate-fairyGlow" style="animation-delay: 1.8s;"></span>
+      <span class="w-2.5 h-3.5 rounded-full bg-red-500 shadow-[0_0_10px_#ef4444] animate-fairyGlow" style="animation-delay: 0.3s;"></span>
+      <span class="w-2.5 h-3.5 rounded-full bg-amber-300 shadow-[0_0_10px_#fde047] animate-fairyGlow" style="animation-delay: 0.9s;"></span>
+      <span class="w-2.5 h-3.5 rounded-full bg-emerald-400 shadow-[0_0_10px_#34d399] animate-fairyGlow" style="animation-delay: 1.5s;"></span>
+      <span class="w-2.5 h-3.5 rounded-full bg-blue-400 shadow-[0_0_10px_#60a5fa] animate-fairyGlow" style="animation-delay: 2.1s;"></span>
+      <span class="w-2.5 h-3.5 rounded-full bg-red-500 shadow-[0_0_10px_#ef4444] animate-fairyGlow" style="animation-delay: 0.5s;"></span>
+      <span class="w-2.5 h-3.5 rounded-full bg-amber-300 shadow-[0_0_10px_#fde047] animate-fairyGlow" style="animation-delay: 1.1s;"></span>
+      <span class="w-2.5 h-3.5 rounded-full bg-emerald-400 shadow-[0_0_10px_#34d399] animate-fairyGlow" style="animation-delay: 1.7s;"></span>
+      <span class="w-2.5 h-3.5 rounded-full bg-blue-400 shadow-[0_0_10px_#60a5fa] animate-fairyGlow" style="animation-delay: 2.3s;"></span>
+      <span class="w-2.5 h-3.5 rounded-full bg-red-500 shadow-[0_0_10px_#ef4444] animate-fairyGlow" style="animation-delay: 0.8s;"></span>
+      <span class="w-2.5 h-3.5 rounded-full bg-amber-300 shadow-[0_0_10px_#fde047] animate-fairyGlow" style="animation-delay: 1.4s;"></span>
+      <span class="w-2.5 h-3.5 rounded-full bg-emerald-400 shadow-[0_0_10px_#34d399] animate-fairyGlow" style="animation-delay: 2.0s;"></span>
+      <span class="w-2.5 h-3.5 rounded-full bg-blue-400 shadow-[0_0_10px_#60a5fa] animate-fairyGlow" style="animation-delay: 0.4s;"></span>
+    </div>
+  </div>
+
+  <!-- Top Festive Header & Navigation -->
+  <header class="bg-[#042017] border-b border-emerald-900/60 text-white sticky top-0 z-30 shadow-lg backdrop-blur-md">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      
+      <!-- Brand & Holiday Badge -->
       <div class="flex items-center space-x-3">
-        <span class="text-2xl select-none" role="img" aria-label="spark">⚡</span>
-        <a href="/" class="text-xl sm:text-2xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-amber-300">
-          Zenith '26
+        <!-- Animated Golden Bell in Header -->
+        <button id="header-bell-btn" title="Click to ring Christmas bells!" class="text-2xl select-none hover:scale-110 active:scale-95 transition-transform animate-bellSway cursor-pointer focus:outline-none" aria-label="Ring Christmas Bell">
+          🔔
+        </button>
+        <a href="/" class="flex items-center gap-1.5 group">
+          <span class="font-royal text-xl sm:text-2xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-300 to-yellow-100 group-hover:brightness-110 transition-all">
+            Zenith '26
+          </span>
+          <span class="text-xs text-rose-300 font-semibold hidden md:inline-block font-festive text-lg ml-1">
+            Christmas Edition 🎄
+          </span>
         </a>
-        <span class="hidden sm:inline-block text-xs font-semibold px-2 py-0.5 rounded-full bg-purple-900/80 text-purple-300 border border-purple-700/50">
-          Nov 14–15
+        <span class="hidden sm:inline-flex items-center gap-1 text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-red-950/80 text-amber-200 border border-amber-600/40 shadow-sm">
+          <span>❄️</span> Nov 14–15
         </span>
       </div>
 
-      <nav class="flex items-center space-x-4">
-        <a href="/" class="text-sm font-medium text-purple-300 hover:text-white transition-colors">
-          Explore Events
-        </a>
-        <a href="/admin.html" class="inline-flex items-center space-x-1.5 text-xs sm:text-sm font-medium bg-purple-600 hover:bg-purple-500 active:bg-purple-700 text-white px-3.5 py-1.5 rounded-lg shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-purple-400">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/>
-          </svg>
-          <span>Admin Dashboard</span>
-        </a>
-      </nav>
+      <!-- Festive Controls (Snow, Bells Sound, Music) & Nav Links -->
+      <div class="flex items-center space-x-2 sm:space-x-3">
+        
+        <!-- Interactive Controls Bar: Snow toggle, Sound toggle, Music toggle -->
+        <div class="flex items-center bg-[#021810] border border-emerald-800/60 rounded-full px-2 py-1 space-x-1 text-xs">
+          <!-- Snow Toggle -->
+          <button id="snow-toggle-btn" class="flex items-center gap-1 px-2 py-1 rounded-full text-slate-300 hover:text-white hover:bg-emerald-900/60 transition-colors" title="Toggle Falling Snow">
+            <span>❄️</span>
+            <span class="hidden md:inline text-[11px] font-medium" id="snow-status-text">Snow</span>
+          </button>
+          
+          <span class="text-emerald-800">•</span>
+
+          <!-- Sound / Bells Mute Toggle -->
+          <button id="sound-toggle-btn" class="flex items-center gap-1 px-2 py-1 rounded-full text-slate-300 hover:text-white hover:bg-emerald-900/60 transition-colors" title="Toggle Bell Chimes Sound">
+            <span id="sound-icon">🔔</span>
+            <span class="hidden md:inline text-[11px] font-medium" id="sound-status-text">Chimes</span>
+          </button>
+
+          <span class="text-emerald-800">•</span>
+
+          <!-- Holiday Melody Play/Pause -->
+          <button id="music-toggle-btn" class="flex items-center gap-1 px-2 py-1 rounded-full text-amber-300 hover:text-amber-100 hover:bg-emerald-900/60 transition-colors" title="Play gentle holiday music (Web Audio)">
+            <span id="music-icon">🎵</span>
+            <span class="hidden md:inline text-[11px] font-medium" id="music-status-text">Music</span>
+          </button>
+        </div>
+
+        <!-- Links: Explore & Admin Dashboard -->
+        <nav class="flex items-center space-x-2">
+          <a href="#christmas-countdown" class="hidden sm:inline-block text-xs font-semibold text-amber-200/90 hover:text-amber-100 transition-colors px-2 py-1">
+            Countdown ⏳
+          </a>
+          <a href="/admin.html" class="inline-flex items-center space-x-1.5 text-xs sm:text-sm font-semibold bg-gradient-to-r from-red-700 to-rose-700 hover:from-red-600 hover:to-rose-600 active:from-red-800 active:to-rose-800 text-white px-3 sm:px-3.5 py-1.5 rounded-xl shadow-md border border-amber-400/30 transition-all focus:outline-none focus:ring-2 focus:ring-amber-400">
+            <svg class="w-3.5 h-3.5 text-amber-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/>
+            </svg>
+            <span>Admin</span>
+          </a>
+        </nav>
+      </div>
+
     </div>
   </header>
 
-  <!-- Hero Section -->
-  <section class="relative bg-gradient-to-br from-slate-900 via-purple-950 to-indigo-950 text-white py-12 sm:py-16 px-4 sm:px-6 lg:px-8 overflow-hidden">
-    <!-- Decorative background glow -->
-    <div class="absolute inset-0 opacity-20 pointer-events-none">
-      <div class="absolute -top-24 -left-24 w-96 h-96 bg-purple-500 rounded-full blur-3xl"></div>
-      <div class="absolute top-1/2 -right-24 w-96 h-96 bg-pink-500 rounded-full blur-3xl"></div>
+  <!-- Hero Section: Immersive Christmas Wonderland -->
+  <section class="relative bg-gradient-to-b from-[#2b050d] via-[#4d0b17] to-[#0a2318] text-white py-14 sm:py-20 px-4 sm:px-6 lg:px-8 overflow-hidden border-b-4 border-amber-600/40 shadow-2xl">
+    
+    <!-- Decorative subtle holiday backdrop glows and pine sprigs -->
+    <div class="absolute inset-0 pointer-events-none opacity-30">
+      <div class="absolute -top-32 -left-20 w-96 h-96 bg-red-600 rounded-full blur-3xl"></div>
+      <div class="absolute top-1/3 -right-20 w-96 h-96 bg-emerald-600 rounded-full blur-3xl"></div>
+      <div class="absolute -bottom-20 left-1/3 w-96 h-96 bg-amber-500 rounded-full blur-3xl"></div>
+    </div>
+
+    <!-- Pine branches & holly corner decorative elements -->
+    <div class="absolute top-2 left-3 sm:left-6 text-3xl sm:text-5xl select-none opacity-80 pointer-events-none transform -rotate-12">
+      🌲✨
+    </div>
+    <div class="absolute top-2 right-3 sm:right-6 text-3xl sm:text-5xl select-none opacity-80 pointer-events-none transform rotate-12">
+      ✨🎄
     </div>
 
     <div class="max-w-4xl mx-auto text-center relative z-10">
-      <div class="inline-flex items-center space-x-2 bg-purple-900/60 border border-purple-500/30 text-purple-200 text-xs sm:text-sm font-medium px-3.5 py-1 rounded-full mb-4">
-        <span>🎉 Annual National College Fest</span>
-        <span class="text-purple-400">•</span>
-        <span>Nov 14–15, 2026</span>
+      
+      <!-- Interactive Christmas Bells Feature Banner -->
+      <div class="mb-4 inline-flex items-center justify-center">
+        <button id="hero-bells-btn" class="group flex items-center gap-3 px-5 py-2 rounded-full bg-gradient-to-r from-red-950/80 via-emerald-950/80 to-red-950/80 border border-amber-400/50 shadow-[0_0_20px_rgba(245,158,11,0.25)] hover:border-amber-300 hover:scale-105 active:scale-95 transition-all cursor-pointer focus:outline-none">
+          <span id="hero-bell-icon" class="text-2xl animate-bellSway group-hover:rotate-12 transition-transform select-none">🔔</span>
+          <div class="text-left">
+            <span class="block text-xs font-bold text-amber-300 tracking-wide uppercase">Interactive Christmas Bells</span>
+            <span class="block text-[11px] text-amber-100/80">Click to ring the holiday chimes 🎶</span>
+          </div>
+          <span class="text-lg text-amber-300 group-hover:translate-x-0.5 transition-transform">✨</span>
+        </button>
       </div>
-      <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight sm:leading-none text-white">
-        Experience the Surge at <br class="hidden sm:inline">
-        <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-amber-300">Zenith '26</span>
-      </h1>
-      <p class="mt-4 sm:mt-5 text-sm sm:text-lg text-slate-300 max-w-2xl mx-auto font-light">
-        Compete, create, perform, and connect across 14 adrenaline-fueled technical hackathons, cultural spectacles, esports battles, and masterclasses.
+
+      <!-- Festive Greeting Script -->
+      <p class="font-festive text-3xl sm:text-5xl lg:text-6xl text-amber-300 mb-2 gold-glow">
+        Welcome to the Christmas Wonderland
       </p>
 
-      <!-- Key Stats summary badge pill -->
-      <div class="mt-6 flex flex-wrap justify-center items-center gap-4 text-xs sm:text-sm text-slate-300 font-medium">
-        <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-400"></span> 14 Curated Events</span>
-        <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-purple-400"></span> 2 Unstoppable Days</span>
-        <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-amber-400"></span> 5 Categories</span>
+      <!-- Main Headline -->
+      <h1 class="font-royal text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight text-white mt-1">
+        Celebrate the Season at <br class="hidden sm:inline">
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-yellow-200 gold-glow">
+          Zenith '26
+        </span>
+      </h1>
+
+      <!-- Warm festive description -->
+      <p class="mt-4 sm:mt-5 text-sm sm:text-lg text-amber-100/90 max-w-2xl mx-auto font-light leading-relaxed">
+        Step into a magical holiday experience where competitive spirit meets festive cheer. Compete, perform, and connect across 14 adrenaline-fueled hackathons, cultural spectacles, esports battles, and masterclasses.
+      </p>
+
+      <!-- Interactive Buttons: Celebrate / Enter Magic & Explore Events -->
+      <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+        <!-- Main Glowing CTA: Enter Christmas Magic -->
+        <a 
+          href="#christmas-countdown" 
+          id="enter-magic-btn"
+          class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-2xl text-sm sm:text-base font-bold bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 active:scale-95 text-red-950 shadow-[0_0_25px_rgba(245,158,11,0.5)] transition-all transform hover:-translate-y-0.5 focus:outline-none focus:ring-4 focus:ring-amber-300"
+        >
+          <span>🎄 Enter the Christmas Magic</span>
+          <svg class="w-4 h-4 text-red-950" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
+        </a>
+
+        <!-- Secondary CTA: Explore Fest Events -->
+        <a 
+          href="#events-section" 
+          class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl text-sm sm:text-base font-semibold bg-emerald-950/70 hover:bg-emerald-900/90 text-amber-200 border border-emerald-600/50 hover:border-amber-400/60 shadow-md transition-all active:scale-95 focus:outline-none"
+        >
+          <span>🎁 Explore 14 Curated Events</span>
+        </a>
       </div>
+
+      <!-- Festive Highlights summary pill -->
+      <div class="mt-8 flex flex-wrap justify-center items-center gap-3 sm:gap-6 text-xs sm:text-sm text-amber-100/90 font-medium">
+        <span class="flex items-center gap-1.5 bg-black/30 backdrop-blur-sm px-3 py-1 rounded-full border border-amber-500/20">
+          <span>❄️</span> 14 Curated Events
+        </span>
+        <span class="flex items-center gap-1.5 bg-black/30 backdrop-blur-sm px-3 py-1 rounded-full border border-amber-500/20">
+          <span>🕯️</span> 2 Unstoppable Days
+        </span>
+        <span class="flex items-center gap-1.5 bg-black/30 backdrop-blur-sm px-3 py-1 rounded-full border border-amber-500/20">
+          <span>⭐</span> 5 Festive Categories
+        </span>
+        <span class="flex items-center gap-1.5 bg-black/30 backdrop-blur-sm px-3 py-1 rounded-full border border-amber-500/20">
+          <span>🔔</span> Free Student Registrations
+        </span>
+      </div>
+
     </div>
   </section>
 
-  <!-- Main Content: Filters & Events Grid -->
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full">
+  <!-- Section 4: Christmas Countdown Timer -->
+  <section id="christmas-countdown" class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-20 w-full">
+    <div class="bg-gradient-to-br from-[#064e3b] via-[#022c22] to-[#041d14] rounded-3xl p-6 sm:p-8 border-2 border-amber-400/50 shadow-[0_15px_40px_-10px_rgba(2,44,34,0.6)] text-white relative overflow-hidden">
+      
+      <!-- Decorative Pine & Holly Watermark -->
+      <div class="absolute -right-8 -bottom-8 text-7xl select-none opacity-20 pointer-events-none">
+        🎄
+      </div>
+      <div class="absolute -left-8 -top-8 text-7xl select-none opacity-20 pointer-events-none">
+        🎁
+      </div>
+
+      <!-- Heading -->
+      <div class="text-center relative z-10 mb-6">
+        <div class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-amber-300 bg-amber-950/60 border border-amber-500/30 px-3.5 py-1 rounded-full mb-2">
+          <span>✨ Holiday Countdown ✨</span>
+        </div>
+        <h2 class="font-royal text-2xl sm:text-3xl font-extrabold text-white tracking-wide">
+          The Magic of Christmas Begins In...
+        </h2>
+        <p class="text-xs sm:text-sm text-emerald-200/80 mt-1">
+          Counting down to December 25th at midnight in your local time
+        </p>
+      </div>
+
+      <!-- Live Countdown Grid: 4 Festive Panels (Days, Hours, Minutes, Seconds) -->
+      <div id="countdown-container" class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 max-w-2xl mx-auto relative z-10">
+        
+        <!-- Days Card -->
+        <div class="bg-gradient-to-b from-[#8b1524] to-[#5c0a15] border border-amber-400/40 rounded-2xl p-4 sm:p-5 text-center shadow-lg transform hover:scale-105 transition-transform">
+          <div id="countdown-days" class="font-royal text-3xl sm:text-5xl font-black text-amber-200 gold-glow">
+            --
+          </div>
+          <div class="text-[11px] sm:text-xs font-bold text-amber-300/80 tracking-widest uppercase mt-1">
+            Days
+          </div>
+        </div>
+
+        <!-- Hours Card -->
+        <div class="bg-gradient-to-b from-[#8b1524] to-[#5c0a15] border border-amber-400/40 rounded-2xl p-4 sm:p-5 text-center shadow-lg transform hover:scale-105 transition-transform">
+          <div id="countdown-hours" class="font-royal text-3xl sm:text-5xl font-black text-amber-200 gold-glow">
+            --
+          </div>
+          <div class="text-[11px] sm:text-xs font-bold text-amber-300/80 tracking-widest uppercase mt-1">
+            Hours
+          </div>
+        </div>
+
+        <!-- Minutes Card -->
+        <div class="bg-gradient-to-b from-[#8b1524] to-[#5c0a15] border border-amber-400/40 rounded-2xl p-4 sm:p-5 text-center shadow-lg transform hover:scale-105 transition-transform">
+          <div id="countdown-minutes" class="font-royal text-3xl sm:text-5xl font-black text-amber-200 gold-glow">
+            --
+          </div>
+          <div class="text-[11px] sm:text-xs font-bold text-amber-300/80 tracking-widest uppercase mt-1">
+            Minutes
+          </div>
+        </div>
+
+        <!-- Seconds Card -->
+        <div class="bg-gradient-to-b from-[#8b1524] to-[#5c0a15] border border-amber-400/40 rounded-2xl p-4 sm:p-5 text-center shadow-lg transform hover:scale-105 transition-transform">
+          <div id="countdown-seconds" class="font-royal text-3xl sm:text-5xl font-black text-amber-300 gold-glow">
+            --
+          </div>
+          <div class="text-[11px] sm:text-xs font-bold text-amber-300/80 tracking-widest uppercase mt-1">
+            Seconds
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Christmas Day Celebration Banner (hidden until Christmas arrives) -->
+      <div id="christmas-celebration-banner" class="hidden text-center py-4 bg-gradient-to-r from-red-800 via-emerald-800 to-red-800 rounded-2xl border-2 border-amber-400 mt-4 p-6 shadow-xl">
+        <h3 class="font-festive text-4xl sm:text-5xl text-amber-200 mb-1 gold-glow">🎅 Merry Christmas! 🎄</h3>
+        <p class="text-sm sm:text-base text-white font-medium">May your holidays be filled with joy, warmth, peace, and celebration!</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Main Content: Festive Controls, Search, Category Filters & Events Grid -->
+  <main id="events-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex-1 w-full">
     
+    <!-- Section Title & Description -->
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-3">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="text-xl">🎁</span>
+          <h2 class="font-royal text-2xl sm:text-3xl font-extrabold text-[#450a0a]">
+            Festival Event Discovery
+          </h2>
+        </div>
+        <p class="text-xs sm:text-sm text-slate-600 mt-0.5">
+          Browse competitions, workshops, and spectacles. Live seat availability updated in real-time.
+        </p>
+      </div>
+
+      <div class="flex items-center gap-2 text-xs text-[#064e3b] font-semibold bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-xl">
+        <span>⚡ Real-Time SQLite Sync</span>
+      </div>
+    </div>
+
     <!-- Controls Bar: Search & Category Filters -->
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-4 sm:p-6 mb-8">
+    <div class="bg-[#fffdf9] rounded-2xl shadow-sm border border-emerald-900/10 p-4 sm:p-6 mb-8 relative overflow-hidden">
+      
+      <!-- Subtle top decorative ribbon accent -->
+      <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-red-600 via-amber-400 to-emerald-600"></div>
+
       <div class="flex flex-col md:flex-row gap-4 justify-between items-stretch md:items-center">
         
         <!-- Search Input -->
         <div class="relative flex-1 max-w-md">
           <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-4 h-4 text-emerald-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
             </svg>
           </div>
           <input 
             type="text" 
             id="search-input" 
-            placeholder="Search events by title (e.g. Code Sprint)..." 
-            class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all text-slate-800 placeholder-slate-400"
+            placeholder="Search events (e.g. Code Sprint, Robo Race)..." 
+            class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all text-slate-800 placeholder-slate-400"
           >
           <button id="clear-search-btn" class="hidden absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
           </button>
         </div>
 
-        <!-- Category Filter Buttons -->
+        <!-- Category Filter Buttons (Preserving All Original Categories with Festive Accents) -->
         <div class="flex items-center overflow-x-auto pb-1 md:pb-0 gap-1.5 sm:gap-2 text-xs sm:text-sm font-medium no-scrollbar" id="category-filters">
-          <button data-category="All" class="cat-btn active-cat px-3.5 py-2 rounded-xl border transition-all whitespace-nowrap bg-purple-600 text-white border-purple-600 shadow-sm">
-            All
+          <button data-category="All" class="cat-btn active-cat px-3.5 py-2 rounded-xl border transition-all whitespace-nowrap bg-red-800 text-white border-red-800 shadow-sm hover:bg-red-700">
+            All Events
           </button>
-          <button data-category="Technical" class="cat-btn px-3.5 py-2 rounded-xl border transition-all whitespace-nowrap bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100 hover:text-slate-800">
-            Technical
+          <button data-category="Technical" class="cat-btn px-3.5 py-2 rounded-xl border transition-all whitespace-nowrap bg-slate-50 text-slate-700 border-slate-200 hover:bg-emerald-50 hover:text-emerald-900 hover:border-emerald-300">
+            💻 Technical
           </button>
-          <button data-category="Cultural" class="cat-btn px-3.5 py-2 rounded-xl border transition-all whitespace-nowrap bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100 hover:text-slate-800">
-            Cultural
+          <button data-category="Cultural" class="cat-btn px-3.5 py-2 rounded-xl border transition-all whitespace-nowrap bg-slate-50 text-slate-700 border-slate-200 hover:bg-rose-50 hover:text-rose-900 hover:border-rose-300">
+            🎭 Cultural
           </button>
-          <button data-category="Sports" class="cat-btn px-3.5 py-2 rounded-xl border transition-all whitespace-nowrap bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100 hover:text-slate-800">
-            Sports
+          <button data-category="Sports" class="cat-btn px-3.5 py-2 rounded-xl border transition-all whitespace-nowrap bg-slate-50 text-slate-700 border-slate-200 hover:bg-teal-50 hover:text-teal-900 hover:border-teal-300">
+            ⚽ Sports
           </button>
-          <button data-category="Gaming" class="cat-btn px-3.5 py-2 rounded-xl border transition-all whitespace-nowrap bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100 hover:text-slate-800">
-            Gaming
+          <button data-category="Gaming" class="cat-btn px-3.5 py-2 rounded-xl border transition-all whitespace-nowrap bg-slate-50 text-slate-700 border-slate-200 hover:bg-amber-50 hover:text-amber-900 hover:border-amber-300">
+            🎮 Gaming
           </button>
-          <button data-category="Workshop" class="cat-btn px-3.5 py-2 rounded-xl border transition-all whitespace-nowrap bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100 hover:text-slate-800">
-            Workshop
+          <button data-category="Workshop" class="cat-btn px-3.5 py-2 rounded-xl border transition-all whitespace-nowrap bg-slate-50 text-slate-700 border-slate-200 hover:bg-cyan-50 hover:text-cyan-900 hover:border-cyan-300">
+            ⚡ Workshop
           </button>
         </div>
 
@@ -156,23 +487,23 @@
     <!-- Active query indicator -->
     <div id="query-indicator" class="hidden mb-4 flex items-center justify-between text-xs text-slate-500">
       <span id="query-indicator-text"></span>
-      <button id="reset-query-btn" class="text-purple-600 hover:underline font-semibold">Clear all filters</button>
+      <button id="reset-query-btn" class="text-red-700 hover:underline font-semibold">Clear all filters</button>
     </div>
 
-    <!-- Events Grid Container (Step 5, 6, 9) -->
+    <!-- Events Grid Container (Dynamic cards rendered by js/app.js) -->
     <div id="events-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      <!-- Dynamic cards rendered by js/app.js -->
+      <!-- Cards rendered dynamically -->
     </div>
 
   </main>
 
-  <!-- Event Detail & Registration Modal (Step 7) -->
-  <div id="event-modal" class="fixed inset-0 z-50 hidden overflow-y-auto bg-slate-900/60 backdrop-blur-sm p-4 sm:p-6 flex items-center justify-center">
-    <div class="relative w-full max-w-xl bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden transform transition-all animate-fadeIn">
+  <!-- Event Detail & Registration Modal (Christmas Theme Enhancement) -->
+  <div id="event-modal" class="fixed inset-0 z-50 hidden overflow-y-auto bg-slate-950/70 backdrop-blur-sm p-4 sm:p-6 flex items-center justify-center">
+    <div class="relative w-full max-w-xl bg-[#fffdfa] rounded-2xl shadow-2xl border-2 border-amber-500/30 overflow-hidden transform transition-all animate-fadeIn">
       
-      <!-- Modal Header -->
-      <div class="bg-gradient-to-r from-purple-900 to-indigo-900 text-white p-5 sm:p-6 relative">
-        <button id="modal-close-btn" class="absolute top-4 right-4 text-purple-200 hover:text-white bg-white/10 hover:bg-white/20 rounded-full p-1.5 transition-colors focus:outline-none">
+      <!-- Modal Header (Christmas Red & Forest Green Gradient) -->
+      <div class="bg-gradient-to-r from-[#4d0b17] via-[#751121] to-[#0d2e20] text-white p-5 sm:p-6 relative border-b border-amber-400/30">
+        <button id="modal-close-btn" class="absolute top-4 right-4 text-amber-200 hover:text-white bg-white/10 hover:bg-white/20 rounded-full p-1.5 transition-colors focus:outline-none" aria-label="Close modal">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
           </svg>
@@ -182,14 +513,14 @@
           <span id="modal-icon" class="text-3xl sm:text-4xl p-2 rounded-xl bg-white/10 border border-white/20 select-none">💻</span>
           <div>
             <div class="flex items-center gap-2">
-              <span id="modal-category" class="text-xs uppercase tracking-wider font-bold px-2 py-0.5 rounded-full bg-purple-500/30 text-purple-200 border border-purple-400/30">
+              <span id="modal-category" class="text-xs uppercase tracking-wider font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-200 border border-amber-400/30">
                 Category
               </span>
               <span id="modal-fee" class="text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-500/30 text-emerald-200 border border-emerald-400/30">
                 Free
               </span>
             </div>
-            <h2 id="modal-title" class="text-xl sm:text-2xl font-bold tracking-tight mt-1 text-white">Event Title</h2>
+            <h2 id="modal-title" class="font-royal text-xl sm:text-2xl font-bold tracking-tight mt-1 text-white">Event Title</h2>
           </div>
         </div>
       </div>
@@ -232,12 +563,12 @@
 
         <!-- Registration Form Header -->
         <div class="border-t border-slate-200 pt-5">
-          <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
-            <span>Register for this Event</span>
+          <h3 class="text-base font-bold text-slate-800 flex items-center gap-2 font-royal">
+            <span>Register for this Event 🎁</span>
           </h3>
           <p class="text-xs text-slate-500 mt-0.5">Please provide your student details. Confirmation is instant.</p>
 
-          <!-- Status / Error Notification Box (Step 7 & 9) -->
+          <!-- Status / Error Notification Box -->
           <div id="modal-alert" class="hidden mt-3 p-3.5 rounded-xl text-xs sm:text-sm font-medium border"></div>
 
           <!-- Registration Form -->
@@ -251,7 +582,7 @@
                 id="student-name" 
                 required 
                 placeholder="e.g. Rahul Sharma" 
-                class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all text-slate-800"
+                class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all text-slate-800"
               >
               <p class="field-error hidden text-xs text-rose-600 mt-1" id="error-student-name">Student name is required.</p>
             </div>
@@ -264,7 +595,7 @@
                   id="roll-number" 
                   required 
                   placeholder="e.g. 2026CS108" 
-                  class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all text-slate-800"
+                  class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all text-slate-800"
                 >
                 <p class="field-error hidden text-xs text-rose-600 mt-1" id="error-roll-number">Roll number is required.</p>
               </div>
@@ -275,7 +606,7 @@
                   type="tel" 
                   id="student-phone" 
                   placeholder="e.g. +91 9876543210" 
-                  class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all text-slate-800"
+                  class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all text-slate-800"
                 >
               </div>
             </div>
@@ -287,7 +618,7 @@
                 id="student-email" 
                 required 
                 placeholder="e.g. rahul@college.edu" 
-                class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all text-slate-800"
+                class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all text-slate-800"
               >
               <p class="field-error hidden text-xs text-rose-600 mt-1" id="error-student-email">A valid email address containing '@' is required.</p>
             </div>
@@ -305,7 +636,7 @@
               <button 
                 type="submit" 
                 id="submit-reg-btn"
-                class="inline-flex items-center justify-center space-x-2 px-5 py-2 rounded-lg text-sm font-semibold bg-purple-600 hover:bg-purple-500 active:bg-purple-700 text-white shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-purple-400 disabled:opacity-50 disabled:cursor-not-allowed"
+                class="inline-flex items-center justify-center space-x-2 px-5 py-2 rounded-lg text-sm font-semibold bg-red-800 hover:bg-red-700 active:bg-red-900 text-white shadow-md transition-all focus:outline-none focus:ring-2 focus:ring-amber-400 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <span id="submit-btn-text">Confirm Registration</span>
                 <svg id="submit-spinner" class="hidden animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
@@ -323,19 +654,24 @@
     </div>
   </div>
 
-  <!-- Footer -->
-  <footer class="bg-white border-t border-slate-200 py-6 mt-auto">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-2">
-      <p>© 2026 Zenith College Fest Management System • Built with FastAPI, SQLite & Tailwind CSS</p>
-      <div class="flex items-center space-x-4">
-        <a href="/docs" target="_blank" class="hover:text-purple-600 transition-colors">API Docs (/docs)</a>
+  <!-- Christmas Footer -->
+  <footer class="bg-[#031d14] border-t-2 border-emerald-900/60 py-8 mt-auto text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between text-xs text-emerald-200/80 gap-3">
+      <div class="flex items-center gap-2">
+        <span class="text-base">🎄</span>
+        <p>© 2026 Zenith College Fest Management System • <span class="text-amber-300 font-medium">Christmas Wonderland Edition</span></p>
+      </div>
+      <div class="flex items-center space-x-4 text-emerald-300">
+        <a href="/docs" target="_blank" class="hover:text-amber-300 transition-colors">API Docs (/docs)</a>
         <span>•</span>
-        <a href="/admin.html" class="hover:text-purple-600 transition-colors">Admin Dashboard</a>
+        <a href="/admin.html" class="hover:text-amber-300 transition-colors">Admin Dashboard</a>
+        <span>•</span>
+        <a href="#christmas-countdown" class="hover:text-amber-300 transition-colors">Countdown</a>
       </div>
     </div>
   </footer>
 
-  <!-- Student portal JavaScript -->
+  <!-- Student portal JavaScript (with Christmas Snow, Countdown, Bells & Audio) -->
   <script src="/js/app.js"></script>
 </body>
 </html>
