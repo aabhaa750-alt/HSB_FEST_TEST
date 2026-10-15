@@ -1,0 +1,426 @@
+{
+  "info": {
+    "_postman_id": "c1f79a94-4b53-4e65-8cb9-zenith26api01",
+    "name": "Zenith '26 College Fest Management System API",
+    "description": "Postman API test collection for Zenith '26 College Fest Management System (PM2-01 & PM2-02)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8081",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "GET /api/events",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200 OK\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Response is an array of events with available_seats\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.be.an(\"array\");",
+              "    pm.expect(jsonData.length).to.be.at.least(1);",
+              "    pm.expect(jsonData[0]).to.have.property(\"id\");",
+              "    pm.expect(jsonData[0]).to.have.property(\"title\");",
+              "    pm.expect(jsonData[0]).to.have.property(\"capacity\");",
+              "    pm.expect(jsonData[0]).to.have.property(\"available_seats\");",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/events?category=Technical&search=code",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "events"],
+          "query": [
+            {
+              "key": "category",
+              "value": "Technical",
+              "description": "Optional category filter"
+            },
+            {
+              "key": "search",
+              "value": "code",
+              "description": "Optional search term for title"
+            }
+          ]
+        },
+        "description": "Returns list of events with available_seats computed live from registrations."
+      },
+      "response": []
+    },
+    {
+      "name": "GET /api/events/{event_id}",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200 OK\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Returns event details for event id 1\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.id).to.eql(1);",
+              "    pm.expect(jsonData).to.have.property(\"title\");",
+              "    pm.expect(jsonData).to.have.property(\"available_seats\");",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/events/1",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "events", "1"]
+        },
+        "description": "Returns full event detail for a single event by id, or 404 if not found."
+      },
+      "response": []
+    },
+    {
+      "name": "POST /api/events/{event_id}/register - Success (201 Created)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 201 Created\", function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "",
+              "pm.test(\"Response contains registration confirmation fields\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property(\"id\");",
+              "    pm.expect(jsonData).to.have.property(\"event_id\", 1);",
+              "    pm.expect(jsonData).to.have.property(\"student_name\");",
+              "    pm.expect(jsonData).to.have.property(\"registered_at\");",
+              "});",
+              "",
+              "pm.test(\"Registration ID is a positive integer\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.id).to.be.a(\"number\").and.to.be.above(0);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"student_name\": \"Rahul Sharma\",\n  \"roll_number\": \"2026CS108\",\n  \"email\": \"rahul.sharma@college.edu\",\n  \"phone\": \"+91 9876543210\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/events/1/register",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "events", "1", "register"]
+        },
+        "description": "Registers a student for event 1. Validates non-empty fields, '@' in email, capacity limits, and duplicate email registration."
+      },
+      "response": [
+        {
+          "name": "201 Created - Valid Registration",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"student_name\": \"Rahul Sharma\",\n  \"roll_number\": \"2026CS108\",\n  \"email\": \"rahul.sharma@college.edu\",\n  \"phone\": \"+91 9876543210\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/events/1/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "events", "1", "register"]
+            }
+          },
+          "status": "Created",
+          "code": 201,
+          "_postman_previewlanguage": "json",
+          "body": "{\n  \"id\": 1,\n  \"event_id\": 1,\n  \"student_name\": \"Rahul Sharma\",\n  \"registered_at\": \"2026-10-12 12:30:00\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "POST /api/events/{event_id}/register - Missing Field (400 Bad Request)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 400 Bad Request\", function () {",
+              "    pm.response.to.have.status(400);",
+              "});",
+              "",
+              "pm.test(\"Response contains validation error detail\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property(\"detail\");",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"student_name\": \"\",\n  \"roll_number\": \"2026CS109\",\n  \"email\": \"invalid-email-format\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/events/1/register",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "events", "1", "register"]
+        },
+        "description": "Demonstrates server-side validation error handling. Missing student_name and invalid email returns 400 Bad Request."
+      },
+      "response": [
+        {
+          "name": "400 Bad Request - Missing Required Field / Invalid Email",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"student_name\": \"\",\n  \"roll_number\": \"2026CS109\",\n  \"email\": \"invalid-email\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/events/1/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "events", "1", "register"]
+            }
+          },
+          "status": "Bad Request",
+          "code": 400,
+          "_postman_previewlanguage": "json",
+          "body": "{\n  \"detail\": \"Student name, roll number, and email must not be empty\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "GET /api/registrations",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200 OK\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Registrations list includes student and event title\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.be.an(\"array\");",
+              "    if (jsonData.length > 0) {",
+              "        pm.expect(jsonData[0]).to.have.property(\"student_name\");",
+              "        pm.expect(jsonData[0]).to.have.property(\"roll_number\");",
+              "        pm.expect(jsonData[0]).to.have.property(\"email\");",
+              "        pm.expect(jsonData[0]).to.have.property(\"event_title\");",
+              "    }",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/registrations?event_id=1",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "registrations"],
+          "query": [
+            {
+              "key": "event_id",
+              "value": "1",
+              "description": "Optional filter by event_id"
+            }
+          ]
+        },
+        "description": "Returns list of student registrations, including event_title for admin dashboard."
+      },
+      "response": []
+    },
+    {
+      "name": "GET /api/stats",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200 OK\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Stats contains all overview metrics\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property(\"total_events\");",
+              "    pm.expect(jsonData).to.have.property(\"total_registrations\");",
+              "    pm.expect(jsonData).to.have.property(\"total_capacity\");",
+              "    pm.expect(jsonData).to.have.property(\"overall_utilization_pct\");",
+              "    pm.expect(jsonData).to.have.property(\"upcoming_events_count\");",
+              "    pm.expect(jsonData).to.have.property(\"events_by_category\");",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/stats",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "stats"]
+        },
+        "description": "Returns live computed statistics: total_events, total_registrations, total_capacity, overall_utilization_pct, upcoming_events_count, and events_by_category."
+      },
+      "response": []
+    },
+    {
+      "name": "POST /api/events (Stretch Goal)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 201 Created\", function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "",
+              "pm.test(\"Created event returns title and capacity\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property(\"id\");",
+              "    pm.expect(jsonData).to.have.property(\"title\");",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Robo Soccer Cup\",\n  \"category\": \"Technical\",\n  \"description\": \"Autonomous small robot soccer match in 3v3 tournament bracket.\",\n  \"event_date\": \"2026-11-14\",\n  \"event_time\": \"03:30 PM\",\n  \"venue\": \"Robotics Arena B\",\n  \"capacity\": 30,\n  \"fee\": 0,\n  \"icon\": \"⚽\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/events",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "events"]
+        },
+        "description": "Stretch goal: Admin creates a new event with validation."
+      },
+      "response": []
+    },
+    {
+      "name": "DELETE /api/registrations/{id} (Stretch Goal)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200 OK\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Returns success cancellation message\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property(\"message\");",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/registrations/1",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "registrations", "1"]
+        },
+        "description": "Stretch goal: Admin cancels a registration by id."
+      },
+      "response": []
+    }
+  ]
+}
